@@ -11,8 +11,29 @@ import (
 	crand "crypto/rand"
 	"encoding/binary"
 	"io"
+	"math/big"
 	mrand "math/rand"
 )
+
+// Reader is crypto/rand.Reader
+var Reader = crand.Reader
+
+// Rand is crypto/rand.Read
+func Read(b []byte) (n int, err error) {
+	return io.ReadFull(Reader, b)
+}
+
+// BigInt is crypto/rand.Int
+func BigInt(rand io.Reader, max *big.Int) (n *big.Int, err error) {
+	return crand.Int(rand, max)
+}
+
+// Prime is crypto/rand.Prime
+func Prime(rand io.Reader, bits int) (p *big.Int, err error) {
+	return Prime(rand, bits)
+}
+
+/**/
 
 // CryptoRandomSource implements math/rand.Source interface using
 // cryptographically secure source (crypto/rand).
