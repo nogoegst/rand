@@ -38,6 +38,7 @@ func Prime(rand io.Reader, bits int) (p *big.Int, err error) {
 // CryptoRandomSource implements math/rand.Source interface using
 // cryptographically secure source (crypto/rand).
 type CryptoRandomSource struct {
+	reader io.Reader
 }
 
 // seed is ignored due to there is no seed
@@ -51,17 +52,23 @@ func (s *CryptoRandomSource) Int63() int64 {
 
 func (s *CryptoRandomSource) Uint64() uint64 {
 	buf := make([]byte, 8)
-	_, err := io.ReadFull(crand.Reader, buf)
+	_, err := io.ReadFull(s.reader, buf)
 	if err != nil {
 		panic(err)
 	}
 	return binary.BigEndian.Uint64(buf)
 }
 
-func NewSource() mrand.Source {
-	return &CryptoRandomSource{}
+func NewSource(reader io.Reader) mrand.Source {
+	return &CryptoRandomSource{
+		reader: reader,
+	}
 }
 
 func New() *mrand.Rand {
-	return mrand.New(NewSource())
+	return mrand.New(NewSource(crand.Reader))
+}
+
+func NewWithReader(reader io.Reader) *mrand.Rand {
+	return mrand.New(NewSource(reader))
 }
