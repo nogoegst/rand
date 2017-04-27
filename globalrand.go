@@ -21,6 +21,14 @@ func Seed(seed int64) { globalRand.Seed(seed) }
 // from the default Source.
 func Int63() int64 { return globalRand.Int63() }
 
+// Uint8 returns a pseudo-random 8-bit value as a uint8
+// from the default Source.
+func Uint8() uint8 { return uint8(Uint16() >> 8) }
+
+// Uint16 returns a pseudo-random 16-bit value as a uint16
+// from the default Source.
+func Uint16() uint16 { return uint16(globalRand.Uint32() >> 16) }
+
 // Uint32 returns a pseudo-random 32-bit value as a uint32
 // from the default Source.
 func Uint32() uint32 { return globalRand.Uint32() }
